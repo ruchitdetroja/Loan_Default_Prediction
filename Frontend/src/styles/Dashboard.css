@@ -1,0 +1,237 @@
+/* ===== DASHBOARD PAGE — EXTRAORDINARY ===== */
+
+.dashboard-page {
+  padding: var(--space-16) 0 var(--space-24);
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: var(--space-12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* Metrics Row */
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.metric-card {
+  position: relative;
+  background: var(--color-bg-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+/* Neon glow on top of metric cards */
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.3), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.metric-card:hover {
+  border-color: var(--color-border-hover);
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(0, 229, 255, 0.04);
+}
+
+.metric-card:hover::before {
+  opacity: 1;
+}
+
+.metric-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Subtle glow behind metric icon */
+.metric-icon::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  filter: blur(8px);
+  opacity: 0.25;
+  z-index: -1;
+}
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.metric-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.metric-change {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Charts Grid */
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.chart-card {
+  position: relative;
+  background: var(--color-bg-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  transition: all var(--transition-base);
+  overflow: hidden;
+}
+
+/* Animated gradient top line on chart cards */
+.chart-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: var(--gradient-primary);
+  background-size: 200% 100%;
+  animation: gradient-shift 3s ease infinite;
+  opacity: 0;
+  transition: all var(--transition-base);
+}
+
+.chart-card:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.chart-card:hover::before {
+  opacity: 0.4;
+  left: 5%;
+  right: 5%;
+}
+
+.chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.chart-title {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+}
+
+.chart-badge {
+  font-size: var(--font-size-xs);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-accent-cyan-dim);
+  color: var(--color-accent-cyan);
+  border: 1px solid rgba(0, 229, 255, 0.12);
+  font-weight: 600;
+}
+
+/* Custom Recharts Styling */
+.recharts-cartesian-axis-tick-value {
+  fill: var(--color-text-tertiary) !important;
+  font-size: 11px !important;
+}
+
+.recharts-legend-item-text {
+  color: var(--color-text-secondary) !important;
+  font-size: 12px !important;
+}
+
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
+
+.custom-tooltip {
+  background: rgba(5, 7, 14, 0.95) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 229, 255, 0.12) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-3) var(--space-4) !important;
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 20px rgba(0, 229, 255, 0.05) !important;
+}
+
+.custom-tooltip .label {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-2);
+}
+
+.custom-tooltip .value {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 1024px) {
+  .dashboard-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-charts {
+    grid-template-columns: 1fr;
+  }
+}
