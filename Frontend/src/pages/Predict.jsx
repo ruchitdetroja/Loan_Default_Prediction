@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap, DollarSign, Percent, Briefcase, Home as HomeIcon,
@@ -6,7 +6,7 @@ import {
   Shield, Info, User, Clock, BookOpen, Heart, Users, FileText
 } from 'lucide-react';
 import GaugeChart from '../components/GaugeChart';
-import { predictLoan } from '../api';
+import { predictLoan, checkBackendHealth } from '../api';
 import '../styles/Predict.css';
 
 const initialForm = {
@@ -26,7 +26,7 @@ const initialForm = {
   hasDependents: '',
   loanPurpose: '',
   hasCosigner: '',
-  model: 'both',
+  model: 'all',
 };
 
 export default function Predict() {
@@ -34,6 +34,12 @@ export default function Predict() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Wake up the Render free-tier backend as soon as the page loads.
+  // By the time the user fills in the form, the server should be ready.
+  useEffect(() => {
+    checkBackendHealth();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -69,23 +75,26 @@ export default function Predict() {
 
       const data = await predictLoan(payload);
 
+      // All possible model keys returned by the backend
+      const MODEL_KEYS = [
+        'logistic_regression',
+        'random_forest',
+        'decision_tree',
+        'adaboost',
+        'bagging',
+      ];
+
       // Build result from real API response
       const models = [];
-      if (data.logistic_regression) {
-        models.push({
-          name: data.logistic_regression.name,
-          prediction: data.logistic_regression.prediction,
-          probability: data.logistic_regression.probability,
-          riskStatus: data.logistic_regression.risk_status,
-        });
-      }
-      if (data.random_forest) {
-        models.push({
-          name: data.random_forest.name,
-          prediction: data.random_forest.prediction,
-          probability: data.random_forest.probability,
-          riskStatus: data.random_forest.risk_status,
-        });
+      for (const key of MODEL_KEYS) {
+        if (data[key]) {
+          models.push({
+            name: data[key].name,
+            prediction: data[key].prediction,
+            probability: data[key].probability,
+            riskStatus: data[key].risk_status,
+          });
+        }
       }
 
       // Use primary result for gauge
@@ -102,7 +111,7 @@ export default function Predict() {
         factors: buildFactors(form),
       });
     } catch (err) {
-      setError(err.message || 'Failed to connect to the prediction server. Make sure the backend is running on port 5000.');
+      setError(err.message || 'Failed to connect to the prediction server. The backend may be waking up — please try again in a few seconds.');
     } finally {
       setLoading(false);
     }
@@ -295,9 +304,12 @@ export default function Predict() {
                 <div className="form-group full-width">
                   <label className="form-label"><Zap size={14} /> Model Selection</label>
                   <select className="form-select" name="model" value={form.model} onChange={handleChange}>
-                    <option value="both">Both Models</option>
+                    <option value="all">All Models</option>
                     <option value="logistic">Logistic Regression</option>
                     <option value="random_forest">Random Forest</option>
+                    <option value="decision_tree">Decision Tree</option>
+                    <option value="adaboost">AdaBoost</option>
+                    <option value="bagging">Bagging Classifier</option>
                   </select>
                 </div>
               </div>
@@ -347,8 +359,8 @@ export default function Predict() {
                     </div>
                     <p className="predict-error-text">{error}</p>
                     <p className="predict-error-hint">
-                      Make sure the Flask backend is running:<br />
-                      <code>cd backend && python app.py</code>
+                      The backend on Render may be waking up from sleep.<br />
+                      Please wait a moment and try again.
                     </p>
                   </motion.div>
                 ) : result ? (
@@ -451,15 +463,19 @@ export default function Predict() {
               <div className="predict-info-list">
                 <div className="predict-info-item">
                   <Shield size={14} style={{ color: 'var(--color-accent-green)' }} />
-                  <span>Logistic Regression & Random Forest</span>
+                  <span>5 ML Models: Logistic Regression, Random Forest, Decision Tree, AdaBoost & Bagging</span>
                 </div>
                 <div className="predict-info-item">
                   <TrendingUp size={14} style={{ color: 'var(--color-accent-purple)' }} />
-                  <span>ML models with probability estimation</span>
+                  <span>Ensemble methods with probability estimation</span>
                 </div>
                 <div className="predict-info-item">
                   <Target size={14} style={{ color: 'var(--color-accent-cyan)' }} />
                   <span>16 features analyzed per prediction</span>
+                </div>
+                <div className="predict-info-item">
+                  <Zap size={14} style={{ color: 'var(--color-accent-cyan)' }} />
+                  <span>Live backend on Render — first request may take ~30s to wake</span>
                 </div>
               </div>
             </div>

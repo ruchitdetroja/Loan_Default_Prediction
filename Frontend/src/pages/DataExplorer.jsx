@@ -11,22 +11,29 @@ import {
 import AnimatedCounter from '../components/AnimatedCounter';
 import '../styles/DataExplorer.css';
 
-// Generate mock dataset
+// Generate mock dataset matching backend features
 const generateData = () => {
-  const grades = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  const ownership = ['RENT', 'OWN', 'MORTGAGE', 'OTHER'];
-  const purposes = ['debt_consolidation', 'credit_card', 'home_improvement', 'major_purchase', 'medical', 'car'];
+  const educations = ['High School', "Bachelor's", "Master's", 'PhD'];
+  const employments = ['Full-time', 'Part-time', 'Self-employed', 'Unemployed'];
+  const maritalStatuses = ['Single', 'Married', 'Divorced'];
+  const purposes = ['Home', 'Auto', 'Education', 'Business', 'Other'];
 
   return Array.from({ length: 100 }, (_, i) => ({
     id: i + 1,
-    income: Math.round(30000 + Math.random() * 170000),
-    loanAmount: Math.round(1000 + Math.random() * 39000),
-    interestRate: +(5 + Math.random() * 20).toFixed(2),
-    grade: grades[Math.floor(Math.random() * grades.length)],
-    ownership: ownership[Math.floor(Math.random() * ownership.length)],
-    purpose: purposes[Math.floor(Math.random() * purposes.length)],
-    creditScore: Math.round(500 + Math.random() * 350),
-    dti: +(2 + Math.random() * 38).toFixed(1),
+    age: Math.round(20 + Math.random() * 45),
+    income: Math.round(25000 + Math.random() * 175000),
+    loanAmount: Math.round(1000 + Math.random() * 49000),
+    creditScore: Math.round(450 + Math.random() * 400),
+    monthsEmployed: Math.round(Math.random() * 180),
+    numCreditLines: Math.round(1 + Math.random() * 8),
+    interestRate: +(3 + Math.random() * 22).toFixed(2),
+    loanTerm: [12, 24, 36, 48, 60][Math.floor(Math.random() * 5)],
+    dtiRatio: +(2 + Math.random() * 48).toFixed(1),
+    education: educations[Math.floor(Math.random() * educations.length)],
+    employmentType: employments[Math.floor(Math.random() * employments.length)],
+    maritalStatus: maritalStatuses[Math.floor(Math.random() * maritalStatuses.length)],
+    hasMortgage: Math.random() > 0.5 ? 'Yes' : 'No',
+    loanPurpose: purposes[Math.floor(Math.random() * purposes.length)],
     status: Math.random() > 0.79 ? 'Default' : 'Paid',
   }));
 };
@@ -48,14 +55,15 @@ const creditScoreDistribution = [
 ];
 
 const featureStats = [
-  { name: 'Annual Income', min: '$20K', mean: '$76K', max: '$200K', pct: 76 },
-  { name: 'Loan Amount', min: '$1K', mean: '$15K', max: '$40K', pct: 38 },
-  { name: 'Interest Rate', min: '5.0%', mean: '12.8%', max: '25.0%', pct: 51 },
-  { name: 'Credit Score', min: '500', mean: '698', max: '850', pct: 82 },
-  { name: 'DTI Ratio', min: '2.0%', mean: '18.5%', max: '40.0%', pct: 46 },
-  { name: 'Employment Len', min: '0 yr', mean: '5.8 yr', max: '30 yr', pct: 19 },
-  { name: 'Num Accounts', min: '1', mean: '11', max: '45', pct: 24 },
-  { name: 'Delinquencies', min: '0', mean: '0.4', max: '8', pct: 5 },
+  { name: 'Age', min: '18', mean: '42', max: '65', pct: 65 },
+  { name: 'Annual Income', min: '$25K', mean: '$76K', max: '$200K', pct: 76 },
+  { name: 'Loan Amount', min: '$1K', mean: '$15K', max: '$50K', pct: 38 },
+  { name: 'Credit Score', min: '450', mean: '698', max: '850', pct: 82 },
+  { name: 'Months Employed', min: '0', mean: '60', max: '180', pct: 33 },
+  { name: 'Credit Lines', min: '1', mean: '4', max: '9', pct: 44 },
+  { name: 'Interest Rate', min: '3.0%', mean: '12.8%', max: '25.0%', pct: 51 },
+  { name: 'Loan Term', min: '12 mo', mean: '36 mo', max: '60 mo', pct: 60 },
+  { name: 'DTI Ratio', min: '2.0%', mean: '18.5%', max: '50.0%', pct: 37 },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -83,9 +91,10 @@ export default function DataExplorer() {
     const q = search.toLowerCase();
     return mockData.filter(
       (r) =>
-        r.grade.toLowerCase().includes(q) ||
-        r.ownership.toLowerCase().includes(q) ||
-        r.purpose.toLowerCase().includes(q) ||
+        r.education.toLowerCase().includes(q) ||
+        r.employmentType.toLowerCase().includes(q) ||
+        r.loanPurpose.toLowerCase().includes(q) ||
+        r.maritalStatus.toLowerCase().includes(q) ||
         r.status.toLowerCase().includes(q) ||
         String(r.income).includes(q)
     );
@@ -114,7 +123,7 @@ export default function DataExplorer() {
         <div className="data-summary-grid">
           {[
             { label: 'Total Records', value: 255000, color: '#00d4ff' },
-            { label: 'Features', value: 28, color: '#7c3aed' },
+            { label: 'Features', value: 16, color: '#7c3aed' },
             { label: 'Default Rate', value: 21.3, suffix: '%', color: '#ef4444', decimals: 1 },
             { label: 'Missing Values', value: 0.2, suffix: '%', color: '#10b981', decimals: 1 },
           ].map((s, i) => (
@@ -149,7 +158,7 @@ export default function DataExplorer() {
               <input
                 className="data-search"
                 type="text"
-                placeholder="Search by grade, status, purpose..."
+                placeholder="Search by education, employment, purpose..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               />
@@ -161,13 +170,14 @@ export default function DataExplorer() {
               <thead>
                 <tr>
                   <th>#</th>
+                  <th>Age</th>
                   <th>Income</th>
                   <th>Loan Amt</th>
-                  <th>Int. Rate</th>
-                  <th>Grade</th>
                   <th>Credit Score</th>
+                  <th>Int. Rate</th>
                   <th>DTI</th>
-                  <th>Ownership</th>
+                  <th>Education</th>
+                  <th>Emp. Type</th>
                   <th>Purpose</th>
                   <th>Status</th>
                 </tr>
@@ -176,14 +186,15 @@ export default function DataExplorer() {
                 {paginated.map((row) => (
                   <tr key={row.id}>
                     <td>{row.id}</td>
+                    <td>{row.age}</td>
                     <td>${row.income.toLocaleString()}</td>
                     <td>${row.loanAmount.toLocaleString()}</td>
-                    <td>{row.interestRate}%</td>
-                    <td><span className={`badge badge-${row.grade <= 'B' ? 'green' : row.grade <= 'D' ? 'cyan' : 'red'}`}>{row.grade}</span></td>
                     <td>{row.creditScore}</td>
-                    <td>{row.dti}%</td>
-                    <td>{row.ownership}</td>
-                    <td>{row.purpose.replace(/_/g, ' ')}</td>
+                    <td>{row.interestRate}%</td>
+                    <td>{row.dtiRatio}%</td>
+                    <td>{row.education}</td>
+                    <td>{row.employmentType}</td>
+                    <td>{row.loanPurpose}</td>
                     <td className={row.status === 'Default' ? 'status-default' : 'status-paid'}>{row.status}</td>
                   </tr>
                 ))}

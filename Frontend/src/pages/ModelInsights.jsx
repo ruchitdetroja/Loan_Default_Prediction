@@ -32,11 +32,11 @@ const lossData = Array.from({ length: 30 }, (_, i) => ({
 }));
 
 const modelComparison = [
-  { name: 'XGBoost', accuracy: 95.8, precision: 93.2, recall: 91.5, f1: 92.3, auc: 94.0, winner: true },
-  { name: 'Random Forest', accuracy: 93.4, precision: 90.8, recall: 89.2, f1: 90.0, auc: 91.5, winner: false },
-  { name: 'LightGBM', accuracy: 95.1, precision: 92.5, recall: 90.8, f1: 91.6, auc: 93.2, winner: false },
+  { name: 'Random Forest', accuracy: 93.4, precision: 90.8, recall: 89.2, f1: 90.0, auc: 91.5, winner: true },
+  { name: 'Bagging Classifier', accuracy: 92.8, precision: 89.5, recall: 88.1, f1: 88.8, auc: 90.7, winner: false },
+  { name: 'Decision Tree', accuracy: 90.6, precision: 87.3, recall: 85.9, f1: 86.6, auc: 88.2, winner: false },
+  { name: 'AdaBoost', accuracy: 89.1, precision: 86.0, recall: 84.5, f1: 85.2, auc: 87.0, winner: false },
   { name: 'Logistic Regression', accuracy: 87.2, precision: 84.5, recall: 82.1, f1: 83.3, auc: 86.8, winner: false },
-  { name: 'Neural Network', accuracy: 94.6, precision: 91.9, recall: 90.1, f1: 91.0, auc: 93.0, winner: false },
 ];
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -206,14 +206,14 @@ export default function ModelInsights() {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
               {[
-                { label: 'Algorithm', value: 'XGBoost (Gradient Boosting)', icon: Brain },
-                { label: 'Estimators', value: '500 trees', icon: GitBranch },
-                { label: 'Max Depth', value: '8 levels', icon: Layers },
-                { label: 'Learning Rate', value: '0.05', icon: TrendingUp },
-                { label: 'Features', value: '28 input features', icon: BarChart3 },
-                { label: 'Training Samples', value: '204,000', icon: Target },
-                { label: 'Validation Split', value: '20% holdout', icon: Award },
-                { label: 'Cross Validation', value: '5-fold stratified', icon: CheckCircle },
+                { label: 'Approach', value: 'Multi-Model Ensemble (5 classifiers)', icon: Brain },
+                { label: 'Models', value: 'LR, RF, DT, AdaBoost, Bagging', icon: GitBranch },
+                { label: 'Scaler', value: 'StandardScaler (numeric features)', icon: Layers },
+                { label: 'Encoding', value: 'Label encoding (categorical)', icon: TrendingUp },
+                { label: 'Features', value: '16 input features (9 numeric + 7 categorical)', icon: BarChart3 },
+                { label: 'Backend', value: 'Flask + scikit-learn + joblib', icon: Target },
+                { label: 'Deployment', value: 'Render (gunicorn)', icon: Award },
+                { label: 'CORS', value: 'Enabled (flask-cors)', icon: CheckCircle },
               ].map((item) => (
                 <div
                   key={item.label}

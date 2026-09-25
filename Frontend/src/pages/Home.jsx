@@ -13,7 +13,7 @@ const features = [
   {
     icon: Brain,
     title: 'Advanced ML Models',
-    description: 'Powered by XGBoost and ensemble methods, our model achieves state-of-the-art accuracy in predicting loan defaults.',
+    description: 'Powered by 5 classifiers — Logistic Regression, Random Forest, Decision Tree, AdaBoost & Bagging — for robust default prediction.',
     color: 'cyan',
   },
   {
@@ -37,7 +37,7 @@ const features = [
   {
     icon: Database,
     title: 'Data-Driven Insights',
-    description: 'Analyze 25+ features from borrower profiles, credit history, and loan characteristics for comprehensive evaluation.',
+    description: 'Analyze 16 features from borrower profiles, credit history, and loan characteristics for comprehensive evaluation.',
     color: 'red',
   },
   {
@@ -115,15 +115,15 @@ export default function Home() {
           </div>
           <div className="stat-card">
             <span className="stat-value" style={{ color: 'var(--color-accent-green)' }}>
-              <AnimatedCounter end={28} suffix="+" />
+              <AnimatedCounter end={16} />
             </span>
             <span className="stat-label">Features Analyzed</span>
           </div>
           <div className="stat-card">
             <span className="stat-value" style={{ color: 'var(--color-accent-amber)' }}>
-              <AnimatedCounter end={0.94} decimals={2} />
+              <AnimatedCounter end={5} />
             </span>
-            <span className="stat-label">AUC-ROC Score</span>
+            <span className="stat-label">ML Models</span>
           </div>
         </div>
       </section>
@@ -170,7 +170,7 @@ export default function Home() {
               {
                 num: 2,
                 title: 'AI Analysis',
-                desc: 'Our XGBoost model analyzes 28+ features using advanced ensemble learning techniques.',
+                desc: 'Our ensemble of 5 ML models analyzes 16 features using classification and boosting techniques.',
                 cls: 'step-2',
               },
               {

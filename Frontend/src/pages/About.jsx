@@ -13,31 +13,32 @@ const team = [
 
 const techStack = [
   { name: 'Python', category: 'Backend', icon: '🐍', color: 'var(--color-accent-green-dim)' },
+  { name: 'Flask', category: 'API Server', icon: '🌶️', color: 'var(--color-accent-red-dim)' },
   { name: 'Scikit-learn', category: 'ML Framework', icon: '🔬', color: 'var(--color-accent-cyan-dim)' },
-  { name: 'XGBoost', category: 'Classifier', icon: '🚀', color: 'var(--color-accent-purple-dim)' },
   { name: 'Pandas', category: 'Data Processing', icon: '🐼', color: 'var(--color-accent-amber-dim)' },
   { name: 'NumPy', category: 'Computation', icon: '📐', color: 'var(--color-accent-cyan-dim)' },
   { name: 'React', category: 'Frontend', icon: '⚛️', color: 'var(--color-accent-cyan-dim)' },
   { name: 'Vite', category: 'Build Tool', icon: '⚡', color: 'var(--color-accent-purple-dim)' },
+  { name: 'Render', category: 'Deployment', icon: '🚀', color: 'var(--color-accent-purple-dim)' },
   { name: 'Recharts', category: 'Visualization', icon: '📊', color: 'var(--color-accent-green-dim)' },
 ];
 
 const timeline = [
-  { date: 'Phase 1 — Research', title: 'Problem Definition & Data Collection', desc: 'Identified credit risk prediction as the target problem. Collected 255K+ loan records with 28 features.' },
+  { date: 'Phase 1 — Research', title: 'Problem Definition & Data Collection', desc: 'Identified credit risk prediction as the target problem. Collected loan records with 16 features covering borrower and loan characteristics.' },
   { date: 'Phase 2 — Exploration', title: 'Exploratory Data Analysis', desc: 'Performed statistical analysis, correlation studies, and data visualization to understand feature distributions and relationships.' },
-  { date: 'Phase 3 — Engineering', title: 'Feature Engineering & Preprocessing', desc: 'Handled missing values, encoded categoricals, normalized numerical features, and engineered new features for model performance.' },
-  { date: 'Phase 4 — Modeling', title: 'Model Development & Training', desc: 'Trained and evaluated multiple ML models including XGBoost, Random Forest, LightGBM, and Neural Networks.' },
-  { date: 'Phase 5 — Tuning', title: 'Hyperparameter Optimization', desc: 'Used Bayesian optimization and grid search to fine-tune the XGBoost classifier, achieving 95.8% accuracy.' },
-  { date: 'Phase 6 — Deployment', title: 'Web Application & Deployment', desc: 'Built an interactive React dashboard for real-time predictions and data exploration.' },
+  { date: 'Phase 3 — Engineering', title: 'Feature Engineering & Preprocessing', desc: 'Handled missing values, label-encoded categoricals, StandardScaler on numerical features, and prepared pipeline for model training.' },
+  { date: 'Phase 4 — Modeling', title: 'Model Development & Training', desc: 'Trained 5 ML classifiers: Logistic Regression, Random Forest, Decision Tree, AdaBoost, and Bagging Classifier.' },
+  { date: 'Phase 5 — Evaluation', title: 'Model Comparison & Selection', desc: 'Compared all models on accuracy, precision, recall, F1 score and AUC-ROC. Random Forest emerged as the best performer.' },
+  { date: 'Phase 6 — Deployment', title: 'Flask API & React Frontend', desc: 'Built a Flask REST API served on Render with gunicorn, and an interactive React + Vite frontend for real-time predictions.' },
 ];
 
 const methodology = [
-  { num: '01', title: 'Data Preprocessing', desc: 'Clean, transform, and normalize the raw dataset.', color: '#00d4ff' },
-  { num: '02', title: 'Feature Selection', desc: 'Identify the most predictive features using statistical tests.', color: '#7c3aed' },
-  { num: '03', title: 'Model Training', desc: 'Train XGBoost with 5-fold cross-validation.', color: '#10b981' },
+  { num: '01', title: 'Data Preprocessing', desc: 'Clean, transform, and normalize the raw dataset with StandardScaler.', color: '#00d4ff' },
+  { num: '02', title: 'Feature Encoding', desc: 'Label-encode 7 categorical features (education, employment, etc.).', color: '#7c3aed' },
+  { num: '03', title: 'Model Training', desc: 'Train 5 classifiers: LR, RF, DT, AdaBoost, Bagging.', color: '#10b981' },
   { num: '04', title: 'Evaluation', desc: 'Measure performance with accuracy, AUC-ROC, and F1.', color: '#f59e0b' },
-  { num: '05', title: 'Optimization', desc: 'Hyperparameter tuning for optimal performance.', color: '#ec4899' },
-  { num: '06', title: 'Deployment', desc: 'Serve predictions via web interface.', color: '#00d4ff' },
+  { num: '05', title: 'Serialization', desc: 'Persist models and scaler with joblib (.pkl files).', color: '#ec4899' },
+  { num: '06', title: 'Deployment', desc: 'Serve via Flask API on Render with gunicorn.', color: '#00d4ff' },
 ];
 
 export default function About() {
@@ -70,23 +71,24 @@ export default function About() {
             <h2>Predicting Credit Risk <span className="gradient-text">with Machine Learning</span></h2>
             <p>
               This project tackles the critical challenge of predicting loan defaults using machine learning.
-              By analyzing borrower profiles, credit history, and loan characteristics, our model identifies
+              By analyzing borrower profiles, credit history, and loan characteristics, our models identify
               high-risk loans before they default — helping lenders make informed decisions and reduce financial losses.
             </p>
             <p>
-              Our XGBoost-based model achieves 95.8% accuracy on the test set, with an AUC-ROC of 0.94.
-              The model was trained on 255,000+ real-world loan records with 28 carefully engineered features,
-              using 5-fold stratified cross-validation for robust performance estimation.
+              Our ensemble approach uses 5 ML classifiers — Logistic Regression, Random Forest, Decision Tree,
+              AdaBoost, and Bagging — each providing independent predictions with probability scores.
+              The models process 16 carefully selected features (9 numeric + 7 categorical), with StandardScaler
+              normalization and label encoding for robust performance.
             </p>
-            <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
+            <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-accent-green)', fontSize: 'var(--font-size-sm)', fontWeight: 600 }}>
-                <Target size={14} /> 95.8% Accuracy
+                <Target size={14} /> 5 ML Models
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-accent-cyan)', fontSize: 'var(--font-size-sm)', fontWeight: 600 }}>
-                <BarChart3 size={14} /> 0.94 AUC-ROC
+                <BarChart3 size={14} /> 16 Features
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-accent-purple)', fontSize: 'var(--font-size-sm)', fontWeight: 600 }}>
-                <Database size={14} /> 255K+ Records
+                <Database size={14} /> Live on Render
               </div>
             </div>
           </motion.div>
