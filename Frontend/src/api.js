@@ -7,14 +7,12 @@
  * local Flask server if you like.
  */
 
-const LIVE_BACKEND = 'https://loan-default-prediction-srjx.onrender.com';
-
 /**
  * Pick the right base URL:
- *   – Production build  → always use the live Render URL
- *   – Dev server (Vite) → use the live Render URL directly (CORS is enabled on the backend)
+ *   – Production build  → use absolute Render URL directly
+ *   – Dev server (Vite) → use the Vite proxy (`/api`)
  */
-const API_BASE = LIVE_BACKEND;
+const API_BASE = import.meta.env.MODE === 'development' ? '/api' : 'https://loan-default-prediction-srjx.onrender.com';
 
 /**
  * Send loan data to the backend for prediction.
